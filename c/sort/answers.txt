@@ -1,0 +1,20 @@
+sort1 uses: bubble sort
+
+How do you know?:
+Point 1: It takes consistent 0.001s on already sorted files (5000, 10000, 50000), showing it is efficient on sorted data.
+Point 2: It takes slightly longer (0.002s) on reversed data, which fits bubble sort’s behavior of doing more work when data is reversed.
+Point 3: It takes moderate time on random data (0.001s), which matches bubble sort’s characteristic of being efficient on mostly sorted data but slower on unsorted or reversed.
+
+sort2 uses: merge sort
+
+How do you know?:
+Point 1: It consistently takes about 0.001s on sorted, random, and reversed files regardless of size, showing very efficient performance on all types of input.
+Point 2: Its running time does not significantly change with input order, which is a hallmark of merge sort’s O(n log n) time complexity.
+Point 3: This consistent speed on all input types indicates a divide-and-conquer approach rather than simple comparisons or swaps.
+
+sort3 uses: selection sort
+
+How do you know?:
+Point 1: It takes 0.001s on sorted files but slower on random and reversed inputs (0.002s), showing inefficiency on unsorted data.
+Point 2: The running time difference between sorted and unsorted is not very large, consistent with selection sort’s behavior of always scanning the array fully regardless of input order.
+Point 3: The overall slower times on reversed and random inputs and no early exit optimization strongly suggest selection sort, which is known to be inefficient with O(n²) time.
