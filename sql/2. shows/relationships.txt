@@ -1,0 +1,17 @@
+one to one
+
+
+every show has one rating,
+shows table = id
+rating table = show_id
+
+
+one to many
+
+eg. multiple genres are associated with id = 63881 (catweazle)
+
+
+
+many to many
+
+e.g.

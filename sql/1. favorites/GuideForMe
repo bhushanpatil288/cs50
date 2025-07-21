@@ -1,0 +1,172 @@
+squlite3
+
+to create new database named favorites use command
+$ sqlite3 favorites.db
+
+to import existing csv
+
+start it in csv mode (dot(.)- means we are configuring sql program)
+sqlite> .mode csv
+sqlite> .import favorites.csv favorites
+sqlite> .quit (exits to normal terminal again)
+$ sqlite3 favorites.db (go again back to favorites.db)
+
+.schema (pronounced skeema) {table} : check schema, create table if not exists
+
+//selects (displays) data
+SELECT columns FROM table; (for reading data from database)
+eg. SELECT * FROM favorites;  (* for selecting all columns)
+eg. SELECT language FROM favorites;
+
+
+
+
+// few functions in sql
+AVG, COUNT, DISTINCT, LOWER, UPPER, MAX, MIN, ...
+
+// COUNT
+// counts number of rows = SELECT COUNT(*) FROM table
+SELECT COUNT(*) FROM favorites;
+       selects all columsn with to perform count function
+
+// DISTINCT
+// selects unique values from table = SELECT DISTINCT columns FROM table
+SELECT DISTINCT language FROM favorites;
+
+NOW WE CAN MIX COUNT AND DISTINCT TO GET UNIQUE VALUES COUNT
+SELECT COUNT(DISTINCT language) FROM favorites;
+
+
+
+
+// few more functions
+GROUP BY, LIKE, LIMIT, ORDER BY, WHERE
+
+// WHERE
+for eg. if we want to check how many like c?
+// use single quotes for string in c.
+SELECT COUNT(*) FROM Favorites WHERE language = 'C';
+
+// AND
+for eg. previous one with one more condition to check (they like c as well as hello world)
+SELECT COUNT(*) FROM Favorites WHERE language = 'C' AND problem = 'Hello, World';
+
+
+
+
+use conditional filtering
+SELECT COUNT(*) FROM favorites WHERE language = 'C' AND (problem = 'Hello, World' OR problem = 'Hello, It''s Me');
+
+two '' apostrophe used as escape sequence character
+
+
+// LIKE
+(search keyword not same but like it) and use % with it.
+SELECT COUNT(*) FROM favorites WHERE language = 'C' AND problem LIKE 'Hello, %';
+
+
+// GROUP BY  (can be used to do quick analysis)
+SELECT language, COUNT(*) FROM favorites GROUP BY language;
+
+// ORDER BY
+for now it is in order c, python scratch but we want to order it low to high(sort it in ascending order)
+SELECT language, COUNT(*) FROM favorites GROUP BY language ORDER BY COUNT(*);
+
+// DESC
+if we want to sort it in descending order
+SELECT language, COUNT(*) FROM favorites GROUP BY language ORDER BY COUNT(*) DESC;
+
+// RENAMING COUNT(*) AS n
+WE CAN RENAME OUTPUT COLUMNS IN SQL
+SELECT language, COUNT(*) AS n FROM favorites GROUP BY language ORDER BY N DESC;
+
+
+// LIMIT
+To limit results where database is too big
+> this will give only 1 favorite language (which will be at the top because of descending order)
+SELECT language, COUNT(*) AS n FROM favorites GROUP BY language ORDER BY n DESC LIMIT 1;
+
+
+
+
+
+// INSERTING, DELETING, UPDATING    DATA
+
+
+// INSERTING DATA
+INSERT INTO table (column, ...) VALUES(value, ...);
+INSERT INTO favorites (language, problem) VALUES('SQL', 'FifyVille');
+keeps value and column not inserted NULL. (null = deliberate absense of data not nothing);
+
+// IS NULL or IS NOT NULL
+// DELETION OF DATA
+DELETE FROM table WHERE condition;
+CAUTION : DELETE FROM favorties; (will delete all the data from table)
+DELETE FROM favorites WHERE Timestamp IS NULL;
+
+// UPDATING DATA
+UPDATE table SET column = value WHERE condition;
+we can set column = value, column = value for induvidual columns.
+UPDATE favorites SET language = 'SQL', problem = FiftyVille';   (this will set everyones fav lanuages to SQL).
+
+
+
+
+////////////////
+REMEMBER WE CANT UNDO OPERATIONS SO WE MUST MAKE BACKUP BEFORE DOING SOMETHING STUPID :)
+///////////////
+
+
+
+
+
+
+// DATA TYPES IN SQL DATABASE
+BLOB, INTEGER, NUMBERIC, REAL, TEXT
+*BLOB (BINARY LARGE OBJECT)
+
+
+// NOT NULL
+// UNIQUE
+
+
+// PRIMARY KEY
+// FORIGHN KEY
+
+.timer ON - to check time
+
+before run time : real 0.041 user 0.038047 sys 0.002138
+
+we can create our own index to make database faster for finding title
+CREATE INDEX title_index ON shows(title);  (makes B-tree in memory)(not binary)
+
+after run time : real 0.000 user 0.000280 sys 0.000059
+
+
+ANOTHER LONG EXAMPLE
+
+1)
+SELECT title FROM shows, stars, people
+WHERE shows.id = stars.show_id
+AND people.id = stars.person_id
+AND name = 'Steve Carell';
+
+before Run Time: Run Time: real 3.004 user 1.925962 sys 1.062068
+
+2)
+SELECT title FROM shows WHERE id IN
+(SELECT show_id FROM stars WHERE person_id =
+(SELECT id FROM people WHERE name = 'Steve Carell'));
+
+before Run Time: real 0.238 user 0.228203 sys 0.010291
+
+
+
+NOW LETS CREATE INDEX TO MAKE IT FAST
+
+CREATE INDEX name_index ON people(name);
+CREATE INDEX person_index ON stars(person_id);
+
+
+first one : real 0.001 user 0.000000 sys 0.000502
+second one : real 0.000 user 0.000000 sys 0.000420
